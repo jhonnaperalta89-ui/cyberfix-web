@@ -1,12 +1,6 @@
 ﻿const WHATSAPP_NUMBER = "56929123229";
 
-// Control de modales del cliente
-window.closeModal = function(modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) modal.classList.add('hidden');
-};
-
-// Catálogo de servicios y opciones
+// Catálogo de servicios y opciones específicas
 const servicesData = {
   lavarropas: {
     category: "Lavarropas y Secarropas",
@@ -91,7 +85,13 @@ const servicesData = {
   }
 };
 
-// Abrir pop-up con sub-opciones
+// Control de modales
+window.closeModal = function(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) modal.classList.add('hidden');
+};
+
+// 1. Abrir popup al presionar la tarjeta de catálogo
 window.openCategoryPopup = function(categoryKey) {
   const data = servicesData[categoryKey];
   if (!data) return;
@@ -100,6 +100,8 @@ window.openCategoryPopup = function(categoryKey) {
   const title = document.getElementById('popupCategoryTitle');
   const icon = document.getElementById('popupCategoryIcon');
   const container = document.getElementById('popupOptionsContainer');
+
+  if (!modal || !title || !icon || !container) return;
 
   title.innerText = data.category;
   icon.className = `ph-bold ${data.icon} text-3xl ${data.color}`;
@@ -116,7 +118,7 @@ window.openCategoryPopup = function(categoryKey) {
         </h4>
         <p class="text-xs text-slate-300 mt-1 leading-relaxed">${opt.desc}</p>
       </div>
-      <button onclick="selectOptionFromPopup('${opt.value}')"
+      <button type="button" onclick="window.selectOptionFromPopup('${opt.value}')"
               class="w-full py-2.5 px-3 bg-cyan-500/10 hover:bg-cyan-400 border border-cyan-500/30 text-cyan-300 hover:text-black font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 mt-2">
         <span>Elegir este servicio y reservar</span>
         <i class="ph-bold ph-arrow-right"></i>
@@ -128,31 +130,32 @@ window.openCategoryPopup = function(categoryKey) {
   modal.classList.remove('hidden');
 };
 
-// Seleccionar opción y mostrar formulario
+// 2. Seleccionar opción del popup y desplegar el formulario
 window.selectOptionFromPopup = function(serviceValue) {
   const select = document.getElementById('selectedDeviceInput');
-  
-  let exists = false;
-  for (let i = 0; i < select.options.length; i++) {
-    if (select.options[i].value === serviceValue) {
-      exists = true;
-      break;
+  if (select) {
+    let exists = false;
+    for (let i = 0; i < select.options.length; i++) {
+      if (select.options[i].value === serviceValue) {
+        exists = true;
+        break;
+      }
     }
+    if (!exists) {
+      const newOpt = new Option(serviceValue, serviceValue, true, true);
+      select.add(newOpt);
+    }
+    select.value = serviceValue;
   }
 
-  if (!exists) {
-    const newOpt = new Option(serviceValue, serviceValue, true, true);
-    select.add(newOpt);
-  }
+  window.closeModal('catalogPopupModal');
 
-  select.value = serviceValue;
-  closeModal('catalogPopupModal');
-
+  // Mostrar el formulario
   const formSection = document.getElementById('form-section');
-  formSection.classList.remove('hidden');
-  formSection.classList.add('modal-enter');
-  
-  formSection.scrollIntoView({ behavior: 'smooth' });
+  if (formSection) {
+    formSection.classList.remove('hidden');
+    formSection.scrollIntoView({ behavior: 'smooth' });
+  }
 };
 
 // Generador de código único SRV-XXXX
@@ -165,9 +168,9 @@ function generateBookingCode() {
   return `SRV-${code}`;
 }
 
-// Crear reserva
+// 3. Crear reserva
 window.createReservation = function(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
   const code = generateBookingCode();
   const newReservation = {
     id: Date.now().toString(),
@@ -193,9 +196,9 @@ window.createReservation = function(e) {
   document.getElementById('reservationForm').reset();
 };
 
-// CONSULTAR ESTADO DE RESERVA POR CÓDIGO
+// 4. Consultar estado de ticket
 window.checkReservationStatus = function(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
   const searchInput = document.getElementById('statusSearchInput');
   const codeQuery = searchInput.value.trim().toUpperCase();
   const resultContainer = document.getElementById('statusResultContainer');
@@ -204,7 +207,6 @@ window.checkReservationStatus = function(e) {
   const found = reservations.find(r => r.code.toUpperCase() === codeQuery);
 
   resultContainer.classList.remove('hidden');
-  resultContainer.classList.add('modal-enter');
 
   if (!found) {
     resultContainer.innerHTML = `
@@ -217,7 +219,6 @@ window.checkReservationStatus = function(e) {
     return;
   }
 
-  // Estilos según estado
   const statusConfig = {
     'Pendiente': {
       bg: 'bg-amber-500/10 border-amber-500/30 text-amber-300',
