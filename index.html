@@ -49,7 +49,7 @@
     </div>
   </div>
 
-  <!-- Barra de Navegación (Sin enlace ni botón de Admin) -->
+  <!-- Barra de Navegación -->
   <header class="border-b border-slate-800/80 bg-cyberBlack/80 backdrop-blur-md sticky top-[45px] z-40">
     <div class="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -64,15 +64,18 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-4">
-        <a href="#consultas" class="text-xs font-semibold text-slate-300 hover:text-cyan-400 transition">
+      <div class="flex items-center gap-6">
+        <a href="#estado-reserva" class="text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 transition">
+          <i class="ph-bold ph-magnifying-glass"></i>
+          <span>Consultar Estado</span>
+        </a>
+        <a href="#consultas" class="hidden sm:inline-flex text-xs font-semibold text-slate-300 hover:text-cyan-400 transition">
           Consultas Generales
         </a>
       </div>
     </div>
   </header>
 
-  <!-- Contenido Central -->
   <main class="max-w-6xl mx-auto px-4 py-14 space-y-20">
     
     <!-- Hero Section -->
@@ -90,15 +93,42 @@
         Diagnóstico de precisión, repuestos garantizados y asignación instantánea de <strong class="text-cyan-300">Ticket de Servicio</strong> para tus equipos.
       </p>
 
-      <div class="flex items-center justify-center gap-4 pt-2">
+      <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
         <a href="#catalogo" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-sm rounded-xl transition shadow-lg shadow-cyan-500/25 flex items-center gap-2">
           <span>Explorar Catálogo</span>
           <i class="ph-bold ph-arrow-down"></i>
         </a>
-        <a href="#consultas" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-sm rounded-xl transition">
-          Hacer una Consulta
+        <a href="#estado-reserva" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-cyan-500/40 font-bold text-sm rounded-xl transition flex items-center gap-2">
+          <i class="ph-bold ph-ticket"></i>
+          <span>Ver Mi Estado de Ticket</span>
         </a>
       </div>
+    </section>
+
+    <!-- NUEVO APARTADO: CONSULTA DE ESTADO DE RESERVA -->
+    <section id="estado-reserva" class="max-w-2xl mx-auto bg-cyberCard border border-slate-800 p-6 md:p-8 rounded-3xl shadow-2xl space-y-6 relative">
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold uppercase tracking-widest">
+          <i class="ph-bold ph-barcode"></i> Consulta en Tiempo Real
+        </div>
+        <h2 class="text-2xl font-black text-white font-cyber">¿Ya tienes un código de reserva?</h2>
+        <p class="text-slate-400 text-xs md:text-sm">Ingresa tu código (ej. <span class="text-cyan-400 font-mono font-bold">SRV-ABCD</span>) para verificar la fase de atención de tu equipo.</p>
+      </div>
+
+      <form id="checkStatusForm" onsubmit="checkReservationStatus(event)" class="space-y-3">
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input type="text" id="statusSearchInput" required placeholder="Ingresa tu código SRV-XXXX" uppercase
+                 class="flex-1 bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-3 text-cyan-300 font-mono font-bold text-base outline-none uppercase text-center sm:text-left transition tracking-widest placeholder:normal-case placeholder:tracking-normal placeholder:font-sans placeholder:font-normal placeholder:text-sm" />
+          <button type="submit"
+                  class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-sm rounded-xl transition shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 whitespace-nowrap">
+            <i class="ph-bold ph-magnifying-glass text-lg"></i>
+            Buscar Estado
+          </button>
+        </div>
+      </form>
+
+      <!-- Contenedor del resultado de búsqueda -->
+      <div id="statusResultContainer" class="hidden"></div>
     </section>
 
     <!-- Catálogo de Equipos -->
@@ -336,6 +366,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

@@ -1,16 +1,12 @@
-﻿import * as Admin from './admin.js';
+﻿const WHATSAPP_NUMBER = "56929123229";
 
-const WHATSAPP_NUMBER = "56929123229";
+// Control de modales del cliente
+window.closeModal = function(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) modal.classList.add('hidden');
+};
 
-// Exponer funciones globales para los eventos onclick en HTML
-window.openAdminModal = Admin.openAdminModal;
-window.closeModal = Admin.closeModal;
-window.loginAdmin = Admin.loginAdmin;
-window.logoutAdmin = Admin.logoutAdmin;
-window.updateStatus = Admin.updateStatus;
-window.deleteReservation = Admin.deleteReservation;
-
-// Catálogo de servicios con sub-opciones y descripciones detalladas
+// Catálogo de servicios y opciones
 const servicesData = {
   lavarropas: {
     category: "Lavarropas y Secarropas",
@@ -95,7 +91,7 @@ const servicesData = {
   }
 };
 
-// Abrir pop-up con las sub-opciones del catálogo
+// Abrir pop-up con sub-opciones
 window.openCategoryPopup = function(categoryKey) {
   const data = servicesData[categoryKey];
   if (!data) return;
@@ -132,7 +128,7 @@ window.openCategoryPopup = function(categoryKey) {
   modal.classList.remove('hidden');
 };
 
-// Selección directa desde el modal: REVELA EL FORMULARIO DE RESERVA
+// Seleccionar opción y mostrar formulario
 window.selectOptionFromPopup = function(serviceValue) {
   const select = document.getElementById('selectedDeviceInput');
   
@@ -152,12 +148,10 @@ window.selectOptionFromPopup = function(serviceValue) {
   select.value = serviceValue;
   closeModal('catalogPopupModal');
 
-  // Mostrar el formulario que estaba oculto
   const formSection = document.getElementById('form-section');
   formSection.classList.remove('hidden');
   formSection.classList.add('modal-enter');
   
-  // Desplazamiento suave directo al formulario
   formSection.scrollIntoView({ behavior: 'smooth' });
 };
 
@@ -171,7 +165,7 @@ function generateBookingCode() {
   return `SRV-${code}`;
 }
 
-// Crear reserva y enviar a WhatsApp
+// Crear reserva
 window.createReservation = function(e) {
   e.preventDefault();
   const code = generateBookingCode();
@@ -191,11 +185,100 @@ window.createReservation = function(e) {
   reservations.unshift(newReservation);
   localStorage.setItem('cyberfix_reservations', JSON.stringify(reservations));
 
-  // Modal de Ticket Digital
   document.getElementById('ticketCode').innerText = newReservation.code;
   const msg = `Hola! Vengo de la web y acabo de generar mi reserva.%0A*Ticket:* ${newReservation.code}%0A*Cliente:* ${encodeURIComponent(newReservation.name)}%0A*Servicio:* ${encodeURIComponent(newReservation.device)}%0A*Dirección:* ${encodeURIComponent(newReservation.address)}%0A*Detalle:* ${encodeURIComponent(newReservation.details)}`;
   document.getElementById('ticketWhatsAppBtn').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
 
   document.getElementById('ticketModal').classList.remove('hidden');
   document.getElementById('reservationForm').reset();
+};
+
+// CONSULTAR ESTADO DE RESERVA POR CÓDIGO
+window.checkReservationStatus = function(e) {
+  e.preventDefault();
+  const searchInput = document.getElementById('statusSearchInput');
+  const codeQuery = searchInput.value.trim().toUpperCase();
+  const resultContainer = document.getElementById('statusResultContainer');
+
+  const reservations = JSON.parse(localStorage.getItem('cyberfix_reservations')) || [];
+  const found = reservations.find(r => r.code.toUpperCase() === codeQuery);
+
+  resultContainer.classList.remove('hidden');
+  resultContainer.classList.add('modal-enter');
+
+  if (!found) {
+    resultContainer.innerHTML = `
+      <div class="p-5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-center space-y-2">
+        <i class="ph-bold ph-warning-circle text-rose-400 text-3xl"></i>
+        <h4 class="font-bold text-white text-base">Código no encontrado</h4>
+        <p class="text-xs text-slate-300">No encontramos ningún ticket activo con el código <span class="font-mono font-bold text-rose-400">${codeQuery}</span>. Verifica que esté bien escrito o comunícate directamente por WhatsApp.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Estilos según estado
+  const statusConfig = {
+    'Pendiente': {
+      bg: 'bg-amber-500/10 border-amber-500/30 text-amber-300',
+      icon: 'ph-clock',
+      title: 'Reserva Pendiente de Revisión',
+      desc: 'Tu solicitud fue recibida. Nuestro técnico revisará la disponibilidad para coordinar la hora de visita.'
+    },
+    'Aceptada': {
+      bg: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300',
+      icon: 'ph-check-circle',
+      title: 'Reserva Aprobada / En Agenda',
+      desc: 'Tu ticket ha sido confirmado por el técnico. La visita a domicilio está programada.'
+    },
+    'Cancelada': {
+      bg: 'bg-rose-500/10 border-rose-500/30 text-rose-300',
+      icon: 'ph-x-circle',
+      title: 'Reserva Cancelada',
+      desc: 'Esta orden fue cancelada o reprogramada. Para mayor información, contáctanos a soporte.'
+    }
+  };
+
+  const currentConfig = statusConfig[found.status] || statusConfig['Pendiente'];
+
+  resultContainer.innerHTML = `
+    <div class="p-6 rounded-2xl bg-slate-950 border border-cyan-500/40 space-y-4 text-left">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase font-mono tracking-wider block">Código de Ticket</span>
+          <span class="font-cyber font-black text-2xl text-cyan-400">${found.code}</span>
+        </div>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold ${currentConfig.bg}">
+          <i class="ph-bold ${currentConfig.icon}"></i>
+          <span>${found.status}</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <div>
+          <span class="text-slate-400 block">Titular:</span>
+          <span class="font-bold text-white text-sm">${found.name}</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block">Servicio solicitado:</span>
+          <span class="font-bold text-cyan-300 text-sm">${found.device}</span>
+        </div>
+        <div class="sm:col-span-2">
+          <span class="text-slate-400 block">Detalle registrado:</span>
+          <p class="text-slate-300 italic mt-0.5">${found.details}</p>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 leading-relaxed">
+        <strong class="text-white block mb-0.5">${currentConfig.title}</strong>
+        ${currentConfig.desc}
+      </div>
+
+      <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola,%20quisiera%20consultar%20por%20mi%20ticket%20${found.code}" target="_blank"
+         class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
+        <i class="ph-bold ph-whatsapp-logo text-base"></i>
+        <span>Consultar avances de este ticket por WhatsApp</span>
+      </a>
+    </div>
+  `;
 };
