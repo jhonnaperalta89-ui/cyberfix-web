@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberFix | Panel Central de Administración</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            cyber: ['Orbitron', 'sans-serif'],
+          },
+          colors: {
+            cyberBlack: '#050811',
+            cyberCard: '#0c1222',
+            cyberNeon: '#00f0ff',
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="text-slate-100 font-sans min-h-screen selection:bg-cyan-500 selection:text-black">
+
+  <header class="border-b border-slate-800 bg-cyberBlack/90 backdrop-blur-md px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-400/40 flex items-center justify-center text-cyan-400 text-2xl shadow-[0_0_15px_rgba(0,240,255,0.2)]">
+        <i class="ph-bold ph-shield-check"></i>
+      </div>
+      <div>
+        <span class="font-cyber font-black text-xl tracking-wider text-white">
+          CYBER<span class="text-cyan-400">FIX</span>
+        </span>
+        <span class="block text-[10px] text-cyan-400 uppercase font-mono tracking-widest font-bold">Consola de Control Privada</span>
+      </div>
+    </div>
+    <a href="index.html" class="text-xs text-slate-400 hover:text-cyan-400 flex items-center gap-1.5 transition">
+      <i class="ph-bold ph-arrow-left"></i>
+      <span>Volver a la Web</span>
+    </a>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-12">
+    <!-- Formulario de Login -->
+    <div id="adminAuthSection" class="max-w-md mx-auto bg-cyberCard border border-slate-800 p-8 rounded-3xl shadow-2xl space-y-6 cyber-glow">
+      <div class="text-center space-y-2">
+        <div class="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-3xl mx-auto shadow-inner">
+          <i class="ph-bold ph-lock-key"></i>
+        </div>
+        <h2 class="text-2xl font-black text-white font-cyber">Acceso Restringido</h2>
+        <p class="text-xs text-slate-400">Introduce las credenciales autorizadas para gestionar reservas.</p>
+      </div>
+
+      <form onsubmit="loginAdmin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Usuario</label>
+          <input type="text" id="adminUserInput" required placeholder="Usuario administrador"
+                 class="w-full bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-3 text-white text-sm outline-none transition" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Contraseña</label>
+          <input type="password" id="adminPassInput" required placeholder="••••••••"
+                 class="w-full bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-3 text-white text-sm outline-none transition" />
+        </div>
+
+        <div id="authError" class="hidden text-rose-400 text-xs bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-center font-medium">
+          Credenciales incorrectas. Verifica usuario y contraseña.
+        </div>
+
+        <button type="submit"
+                class="w-full py-3.5 bg-gradient-to-r from-cyan-400 to-emerald-400 hover:opacity-95 text-slate-950 font-black text-sm rounded-xl shadow-lg transition active:scale-[0.99] flex items-center justify-center gap-2">
+          <i class="ph-bold ph-key text-lg"></i>
+          Ingresar al Panel
+        </button>
+      </form>
+    </div>
+
+    <!-- Panel de Reservas -->
+    <div id="adminDashboardSection" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-cyberCard p-6 rounded-2xl border border-slate-800">
+        <div>
+          <h2 class="text-2xl font-black text-white font-cyber flex items-center gap-2">
+            <i class="ph-bold ph-terminal text-cyan-400"></i>
+            Control Central de Reservas
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">Total de tickets registrados: <span id="totalCount" class="font-bold text-cyan-400">0</span></p>
+        </div>
+        <button onclick="logoutAdmin()" class="px-4 py-2 bg-rose-500/10 hover:bg-rose-500 border border-rose-500/30 text-rose-400 hover:text-white text-xs font-bold rounded-xl transition flex items-center gap-2">
+          <i class="ph-bold ph-sign-out"></i>
+          <span>Cerrar Sesión</span>
+        </button>
+      </div>
+
+      <div class="bg-cyberCard rounded-2xl border border-slate-800 overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-900/90 text-xs text-slate-400 uppercase font-mono tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="p-4">Código</th>
+                <th class="p-4">Cliente / Contacto</th>
+                <th class="p-4">Dirección</th>
+                <th class="p-4">Servicio</th>
+                <th class="p-4">Estado</th>
+                <th class="p-4 text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="reservationsTableBody" class="divide-y divide-slate-800/80"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>
