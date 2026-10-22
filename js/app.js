@@ -16,26 +16,25 @@ const servicesData = {
     category: "Lavarropas y Secarropas",
     icon: "ph-washing-machine",
     color: "text-cyan-400",
-    badgeBg: "bg-cyan-500/10 border-cyan-500/30 text-cyan-300",
     options: [
       {
         name: "Cambio de Rodamientos / Rulemanes y Eje",
-        desc: "Solución definitiva para ruidos metálicos intensos o cuando el tambor está desalineado o pesado.",
+        desc: "Solución para ruidos intensos al centrifugar o tambor suelto/descentrado.",
         value: "Lavarropas: Rodamientos y Eje"
       },
       {
         name: "Bomba de Desagüe y Desobstrucción",
-        desc: "Limpieza o sustitución si el agua se queda estancada en el equipo y no centrifuga.",
+        desc: "Limpieza o cambio si el agua se queda retenida dentro y no vacía.",
         value: "Lavarropas: Bomba de Desagüe"
       },
       {
-        name: "Reparación o Cambio de Placa Electrónica",
-        desc: "Diagnóstico de circuitos si se apaga solo, parpadean las luces o no inician los ciclos de lavado.",
+        name: "Reparación de Placa Electrónica",
+        desc: "Diagnóstico si no prende, parpadean luces o se tilda durante el ciclo.",
         value: "Lavarropas: Placa Electrónica"
       },
       {
-        name: "Mantenimiento General / Fuga de Agua",
-        desc: "Cambio de fuelle/goma de puerta, válvulas de entrada de agua, mangueras y calibración general.",
+        name: "Mantenimiento General / Fugas",
+        desc: "Cambio de fuelle/goma de escotilla, electroválvula de llenado y mangueras.",
         value: "Lavarropas: Mantenimiento General"
       }
     ]
@@ -44,26 +43,25 @@ const servicesData = {
     category: "Hornos y Microondas",
     icon: "ph-cooking-pot",
     color: "text-amber-400",
-    badgeBg: "bg-amber-500/10 border-amber-500/30 text-amber-300",
     options: [
       {
-        name: "Cambio de Magnetrón / Diodo de Alto Voltaje",
-        desc: "Para microondas que prenden y giran con normalidad pero no calientan los alimentos.",
+        name: "Magnetrón y Alto Voltaje",
+        desc: "Microondas que gira y prende normal pero no calienta nada la comida.",
         value: "Microondas: Magnetrón / Alto Voltaje"
       },
       {
-        name: "Reparación de Panel Táctil y Botonera",
-        desc: "Solución para teclados que no marcan el tiempo o no responden al tacto.",
+        name: "Panel Táctil y Teclado Membrana",
+        desc: "Reparación cuando los botones de tiempo o inicio no responden.",
         value: "Microondas: Panel Táctil"
       },
       {
-        name: "Resistencias Térmicas y Termostatos (Hornos)",
-        desc: "Cambio de resistencias superior/inferior en hornos eléctricos que no alcanzan la temperatura adecuada.",
+        name: "Resistencias Térmicas y Termostato",
+        desc: "Hornos eléctricos que no alcanzan temperatura o queman por un solo lado.",
         value: "Horno Eléctrico: Resistencias / Termostato"
       },
       {
-        name: "Eliminación de Chispas y Cambio de Placa Mica",
-        desc: "Sustitución de guías de onda quemadas y aislamiento de chispas internas de seguridad.",
+        name: "Placa Mica y Aislamiento de Chispas",
+        desc: "Solución para chispazos internos que amenazan con quemar el artefacto.",
         value: "Microondas: Placa Mica / Antichispas"
       }
     ]
@@ -72,26 +70,25 @@ const servicesData = {
     category: "Computadores y Notebooks",
     icon: "ph-desktop",
     color: "text-indigo-400",
-    badgeBg: "bg-indigo-500/10 border-indigo-500/30 text-indigo-300",
     options: [
       {
-        name: "Limpieza Profunda + Pasta Térmica Premium",
-        desc: "Desarme completo, soplado de turbinas y colocación de pasta térmica disipadora para evitar recalentamiento.",
+        name: "Limpieza Profunda + Pasta Térmica",
+        desc: "Desarme, soplado de turbinas y pasta térmica para quitar el recalentamiento.",
         value: "PC/Notebook: Limpieza y Pasta Térmica"
       },
       {
-        name: "Actualización a Disco Sólido (SSD)",
-        desc: "Multiplica la velocidad hasta 10 veces instalando un SSD nuevo con migración de tus archivos.",
+        name: "Instalación de Disco Sólido (SSD)",
+        desc: "Aumenta la velocidad hasta 10 veces manteniendo tus fotos y archivos.",
         value: "PC/Notebook: Instalación de Disco SSD"
       },
       {
-        name: "Formateo y Optimización de Sistema",
-        desc: "Instalación limpia de Windows, eliminación total de virus y configuración de programas esenciales.",
+        name: "Formateo e Instalación Limpia",
+        desc: "Sistema Windows optimizado, sin virus y con programas esenciales listos.",
         value: "PC/Notebook: Formateo y Optimización"
       },
       {
         name: "Reparación de Bisagras y Pantallas",
-        desc: "Reconstrucción estructural de carcasas rotas, cambio de display LED y cables flex dañados.",
+        desc: "Arreglo de carcasas rotas al abrir la laptop y cambio de displays dañados.",
         value: "Notebook: Bisagras y Pantalla"
       }
     ]
@@ -114,18 +111,18 @@ window.openCategoryPopup = function(categoryKey) {
 
   data.options.forEach(opt => {
     const card = document.createElement('div');
-    card.className = "bg-slate-900/90 border border-slate-700/80 hover:border-cyan-400 p-4 rounded-2xl transition duration-200 flex flex-col justify-between gap-3 text-left";
+    card.className = "bg-slate-950/90 border border-slate-800 hover:border-cyan-400 p-4 rounded-2xl transition duration-200 flex flex-col justify-between gap-3 text-left";
     card.innerHTML = `
       <div>
-        <h4 class="font-bold text-white text-base flex items-center gap-2">
+        <h4 class="font-bold text-white text-sm md:text-base flex items-center gap-2">
           <i class="ph-bold ph-check text-cyan-400"></i>
           ${opt.name}
         </h4>
-        <p class="text-xs md:text-sm text-slate-300 mt-1 leading-relaxed">${opt.desc}</p>
+        <p class="text-xs text-slate-300 mt-1 leading-relaxed">${opt.desc}</p>
       </div>
       <button onclick="selectOptionFromPopup('${opt.value}')"
-              class="w-full py-2 px-3 bg-cyan-500/10 hover:bg-cyan-500 border border-cyan-500/40 text-cyan-300 hover:text-black font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 mt-2">
-        <span>Seleccionar este servicio</span>
+              class="w-full py-2.5 px-3 bg-cyan-500/10 hover:bg-cyan-400 border border-cyan-500/30 text-cyan-300 hover:text-black font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 mt-2">
+        <span>Elegir este servicio y reservar</span>
         <i class="ph-bold ph-arrow-right"></i>
       </button>
     `;
@@ -135,11 +132,10 @@ window.openCategoryPopup = function(categoryKey) {
   modal.classList.remove('hidden');
 };
 
-// Selección directa desde el modal
+// Selección directa desde el modal: REVELA EL FORMULARIO DE RESERVA
 window.selectOptionFromPopup = function(serviceValue) {
   const select = document.getElementById('selectedDeviceInput');
   
-  // Asegurar que exista la opción en el select
   let exists = false;
   for (let i = 0; i < select.options.length; i++) {
     if (select.options[i].value === serviceValue) {
@@ -156,11 +152,13 @@ window.selectOptionFromPopup = function(serviceValue) {
   select.value = serviceValue;
   closeModal('catalogPopupModal');
 
-  // Feedback y scroll suave
+  // Mostrar el formulario que estaba oculto
   const formSection = document.getElementById('form-section');
+  formSection.classList.remove('hidden');
+  formSection.classList.add('modal-enter');
+  
+  // Desplazamiento suave directo al formulario
   formSection.scrollIntoView({ behavior: 'smooth' });
-  formSection.classList.add('ring-2', 'ring-cyan-400');
-  setTimeout(() => formSection.classList.remove('ring-2', 'ring-cyan-400'), 1500);
 };
 
 // Generador de código único SRV-XXXX
@@ -173,7 +171,7 @@ function generateBookingCode() {
   return `SRV-${code}`;
 }
 
-// Crear reserva
+// Crear reserva y enviar a WhatsApp
 window.createReservation = function(e) {
   e.preventDefault();
   const code = generateBookingCode();
@@ -193,9 +191,9 @@ window.createReservation = function(e) {
   reservations.unshift(newReservation);
   localStorage.setItem('cyberfix_reservations', JSON.stringify(reservations));
 
-  // Actualizar Modal de Ticket Digital
+  // Modal de Ticket Digital
   document.getElementById('ticketCode').innerText = newReservation.code;
-  const msg = `Hola! Quiero coordinar mi reserva de servicio técnico.%0A*Código:* ${newReservation.code}%0A*Cliente:* ${encodeURIComponent(newReservation.name)}%0A*Servicio:* ${encodeURIComponent(newReservation.device)}%0A*Dirección:* ${encodeURIComponent(newReservation.address)}%0A*Detalles:* ${encodeURIComponent(newReservation.details)}`;
+  const msg = `Hola! Vengo de la web y acabo de generar mi reserva.%0A*Ticket:* ${newReservation.code}%0A*Cliente:* ${encodeURIComponent(newReservation.name)}%0A*Servicio:* ${encodeURIComponent(newReservation.device)}%0A*Dirección:* ${encodeURIComponent(newReservation.address)}%0A*Detalle:* ${encodeURIComponent(newReservation.details)}`;
   document.getElementById('ticketWhatsAppBtn').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
 
   document.getElementById('ticketModal').classList.remove('hidden');
